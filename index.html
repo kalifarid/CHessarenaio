@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d18">
+<title>ChessArena — Global Chess Competition</title>
+
+<style>
+:root {
+    --bg: #080d18;
+    --panel: #111b2b;
+    --panel2: #17243a;
+    --line: #293951;
+    --text: #edf3fc;
+    --muted: #91a2ba;
+    --green: #b8f477;
+    --gold: #f3ca70;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Inter, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+}
+
+button, input, select {
+    font: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+.container {
+    max-width: 1250px;
+    margin: auto;
+    padding: 0 25px;
+}
+
+/* NAVIGATION */
+
+header {
+    height: 78px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8,13,24,.94);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid #ffffff12;
+}
+
+.nav {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: 950;
+    letter-spacing: -1px;
+}
+
+.logo span {
+    color: var(--green);
+}
+
+.nav-links {
+    display: flex;
+    gap: 28px;
+}
+
+.nav-links a {
+    color: #b5c3d7;
+    text-decoration: none;
+    font-size: 13px;
+    transition: .2s;
+}
+
+.nav-links a:hover {
+    color: var(--green);
+}
+
+.nav-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.btn {
+    padding: 12px 19px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 800;
+    font-size: 13px;
+    transition: .2s;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.primary {
+    background: var(--green);
+    color: #17210c;
+}
+
+.secondary {
+    background: #1b2a40;
+    border: 1px solid var(--line);
+    color: white;
+}
+
+/* HERO */
+
+.hero {
+    min-height: 620px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    padding-top: 70px;
+    padding-bottom: 70px;
+}
+
+.eyebrow {
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.hero h1 {
+    font-size: clamp(45px, 6vw, 76px);
+    line-height: .99;
+    letter-spacing: -4px;
+    margin: 22px 0;
+    font-weight: 950;
+}
+
+.hero h1 span {
+    color: var(--green);
+}
+
+.hero p {
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 520px;
+    font-size: 15px;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+/* CHESS BOARD */
+
+.arena {
+    background: linear-gradient(145deg,#182840,#0d1625);
+    border: 1px solid #35465f;
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: 0 25px 70px #0008;
+}
+
+.arena-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.live {
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.board {
+    width: 100%;
+    max-width: 390px;
+    margin: auto;
+    display: grid;
+    grid-template-columns: repeat(8,1fr);
+    aspect-ratio: 1;
+    border: 5px solid #293b54;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.square {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: clamp(23px,3.5vw,39px);
+    cursor: pointer;
+    user-select: none;
+}
+
+.light {
+    background: #dce6d1;
+    color: #17251b;
+}
+
+.dark {
+    background: #78966f;
+    color: #142019;
+}
+
+.square.selected {
+    box-shadow: inset 0 0 0 4px #d4ff7d;
+}
+
+/* STATS */
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    gap: 15px;
+    margin-bottom: 75px;
+}
+
+.stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 15px;
+    padding: 22px;
+}
+
+.stat h2 {
+    font-size: 27px;
+    margin-bottom: 7px;
+}
+
+.stat p {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+/* SECTIONS */
+
+section {
+    padding: 35px 0 70px;
+}
+
+.section-title {
+    margin-bottom: 27px;
+}
+
+.section-title h2 {
+    font-size: 32px;
+    margin: 10px 0;
+    letter-spacing: -1px;
+}
+
+.section-title p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ROOMS */
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 17px;
+}
+
+.room {
+    background: linear-gradient(145deg,#142238,#0e1726);
+    border: 1px solid var(--line);
+    border-radius: 17px;
+    padding: 21px;
+    transition: .25s;
+}
+
+.room:hover {
+    transform: translateY(-5px);
+    border-color: #789b57;
+}
+
+.badge {
+    display: inline-block;
+    background: #233a25;
+    color: var(--green);
+    padding: 6px 9px;
+    border-radius: 6px;
+    font-size: 9px;
+    font-weight: 900;
+}
+
+.badge.paid {
+    background: #3a301d;
+    color: var(--gold);
+}
+
+.room h3 {
+    margin: 17px 0 8px;
+    font-size: 18px;
+}
+
+.room p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+    min-height: 38px;
+}
+
+.room-info {
+    border-top: 1px solid #ffffff14;
+    margin-top: 15px;
+    padding-top: 13px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.room-info strong {
+    color: white;
+}
+
+.room button {
+    width: 100%;
+    margin-top: 17px;
+}
+
+/* FEATURES */
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 17px;
+}
+
+.feature {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 23px;
+}
+
+.feature-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 11px;
+    display: grid;
+    place-items: center;
+    background: #263b29;
+    color: var(--green);
+    font-size: 21px;
+}
+
+.feature h3 {
+    margin: 17px 0 9px;
+    font-size: 16px;
+}
+
+.feature p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+/* CTA */
+
+.cta {
+    background: radial-gradient(ellipse at 85% 20%,#b8f47720,transparent 45%),#142236;
+    border: 1px solid #435b36;
+    border-radius: 22px;
+    padding: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 25px;
+}
+
+.cta h2 {
+    font-size: 28px;
+    margin: 12px 0;
+}
+
+.cta p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* FOOTER */
+
+footer {
+    border-top: 1px solid #ffffff15;
+    padding: 35px 0;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 60px;
+}
+
+/* MODAL */
+
+.modal-bg {
+    position: fixed;
+    inset: 0;
+    background: #000b;
+    z-index: 200;
+    display: none;
+    place-items: center;
+    padding: 20px;
+}
+
+.modal-bg.active {
+    display: grid;
+}
+
+.modal {
+    width: 100%;
+    max-width: 430px;
+    background: #142136;
+    border: 1px solid #3a4c65;
+    border-radius: 18px;
+    padding: 27px;
+}
+
+.modal h2 {
+    margin-bottom: 12px;
+}
+
+.modal p {
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.field {
+    margin: 14px 0;
+}
+
+.field label {
+    display: block;
+    color: #b9c6d8;
+    font-size: 12px;
+    margin-bottom: 7px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    padding: 12px;
+    background: #091321;
+    border: 1px solid #30425c;
+    border-radius: 9px;
+    color: white;
+}
+
+.modal .btn {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.close {
+    float: right;
+    background: #263950;
+    border: none;
+    color: white;
+    padding: 7px 10px;
+    border-radius: 7px;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:900px) {
+    .hero {
+        grid-template-columns: 1fr;
+    }
+
+    .room-grid,
+    .features {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .nav-links {
+        display: none;
+    }
+}
+
+@media(max-width:600px) {
+    .hero h1 {
+        font-size: 48px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .room-grid,
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+    }
+
+    .cta {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-actions .secondary {
+        display: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="container nav">
+
+    <div class="logo">♞ CHESS<span>ARENA</span></div>
+
+    <nav class="nav-links">
+        <a href="#rooms">Oyun otaqları</a>
+        <a href="#features">İmkanlar</a>
+        <a href="#tournaments">Turnirlər</a>
+        <a href="#about">Haqqımızda</a>
+    </nav>
+
+    <div class="nav-actions">
+        <select id="language" class="secondary" aria-label="Dil seçimi">
+            <option>AZ</option>
+            <option>EN</option>
+            <option>TR</option>
+            <option>RU</option>
+            <option>AR</option>
+            <option>ES</option>
+            <option>FR</option>
+            <option>DE</option>
+            <option>PT</option>
+            <option>ZH-CN</option>
+        </select>
+
+        <button class="btn secondary" onclick="openModal('login')">
+            Daxil ol
+        </button>
+
+        <button class="btn primary" onclick="openModal('register')">
+            Qeydiyyat
+        </button>
+    </div>
+
+</div>
+</header>
+
+<main>
+<div class="container">
+
+<!-- HERO -->
+
+<section class="hero">
+
+<div>
+    <div class="eyebrow">GLOBAL CHESS ARENA</div>
+
+    <h1>
+        REAL PLAYERS.<br>
+        <span>REAL CHESS.</span>
+    </h1>
+
+    <p>
+        Dünyanın hər yerindən şahmatçılarla qarşılaş.
+        Pulsuz oyunlara qoşul, öz otağını yarat,
+        turnirlərdə yarış və öz reytinqini yüksəlt.
+    </p>
+
+    <div class="hero-buttons">
+        <button class="btn primary" onclick="openModal('register')">
+            Arenaya qoşul →
+        </button>
+
+        <button class="btn secondary"
+        onclick="document.getElementById('rooms').scrollIntoView()">
+            Oyunları kəşf et
+        </button>
+    </div>
+</div>
+
+<div class="arena">
+
+    <div class="arena-header">
+        <div>
+            <div class="live">● FEATURED MATCH</div>
+            <h3 style="margin-top:8px">Live Chess Arena</h3>
+        </div>
+
+        <span class="badge">3 + 0 BLITZ</span>
+    </div>
+
+    <div class="board" id="chessBoard"></div>
+
+    <div style="display:flex;justify-content:space-between;
+    margin-top:15px;color:#91a2ba;font-size:11px">
+        <span>♟ ChessArena Board</span>
+        <span>LIVE INTERFACE</span>
+    </div>
+
+</div>
+
+</section>
+
+<!-- STATISTICS -->
+
+<div class="stats">
+
+    <div class="stat">
+        <h2>10</h2>
+        <p>İnterfeys dili</p>
+    </div>
+
+    <div class="stat">
+        <h2>1 : 1</h2>
+        <p>P2P oyun formatı</p>
+    </div>
+
+    <div class="stat">
+        <h2>1%</h2>
+        <p>Ödənişli oyun komissiyası*</p>
+    </div>
+
+    <div class="stat">
+        <h2>24/7</h2>
+        <p>Qlobal platforma təcrübəsi</p>
+    </div>
+
+</div>
+
+<!-- ROOMS -->
+
+<section id="rooms">
+
+<div class="section-title">
+    <div class="eyebrow">CHOOSE YOUR MATCH</div>
+    <h2>Oyun otaqları</h2>
+    <p>Öz oyun formatını seç və rəqabətə qoşul.</p>
+</div>
+
+<div class="room-grid">
+
+    <div class="room">
+        <span class="badge">PULSUZ</span>
+        <h3>Rapid Arena</h3>
+        <p>Rahat tempdə şahmat və reytinq inkişafı.</p>
+
+        <div class="room-info">
+            <span>Vaxt</span>
+            <strong>10 + 0</strong>
+        </div>
+
+        <div class="room-info">
+            <span>Giriş</span>
+            <strong>$0.00</strong>
+        </div>
+
+        <button class="btn secondary"
+        onclick="joinRoom('Rapid Arena')">
+            Otağa qoşul
+        </button>
+    </div>
+
+    <div class="room">
+        <span class="badge">PULSUZ</span>
+        <h3>Bullet Rush</h3>
+        <p>Sürətli və dinamik şahmat qarşılaşmaları.</p>
+
+        <div class="room-info">
+            <span>Vaxt</span>
+            <strong>1 + 0</strong>
+        </div>
+
+        <div class="room-info">
+            <span>Giriş</span>
+            <strong>$0.00</strong>
+        </div>
+
+        <button class="btn secondary"
+        onclick="joinRoom('Bullet Rush')">
+            Otağa qoşul
+        </button>
+    </div>
+
+    <div class="room">
+        <span class="badge paid">P2P · ÖDƏNİŞLİ</span>
+        <h3>Head-to-Head</h3>
+        <p>Rəqibinlə eyni giriş məbləği ilə yarış.</p>
+
+        <div class="room-info">
+            <span>Vaxt</span>
+            <strong>5 + 3</strong>
+        </div>
+
+        <div class="room-info">
+            <span>Giriş / oyunçu</span>
+            <strong>$5.00</strong>
+        </div>
+
+        <button class="btn primary"
+        onclick="joinRoom('Head-to-Head')">
+            Şərtlərə bax
+        </button>
+    </div>
+
+    <div class="room">
+        <span class="badge">PULSUZ</span>
+        <h3>Beginner Arena</h3>
+        <p>Yeni başlayan şahmatçılar üçün oyun mühiti.</p>
+
+        <div class="room-info">
+            <span>Vaxt</span>
+            <strong>15 + 10</strong>
+        </div>
+
+        <div class="room-info">
+            <span>Giriş</span>
+            <strong>$0.00</strong>
+        </div>
+
+        <button class="btn secondary"
+        onclick="joinRoom('Beginner Arena')">
+            Otağa qoşul
+        </button>
+    </div>
+
+    <div class="room">
+        <span class="badge paid">P2P · ÖDƏNİŞLİ</span>
+        <h3>Pro Challenge</h3>
+        <p>Yüksək səviyyəli oyunçular üçün duel.</p>
+
+        <div class="room-info">
+            <span>Vaxt</span>
+            <strong>3 + 2</strong>
+        </div>
+
+        <div class="room-info">
+            <span>Giriş / oyunçu</span>
+            <strong>$10.00</strong>
+        </div>
+
+        <button class="btn primary"
+        onclick="joinRoom('Pro Challenge')">
+            Şərtlərə bax
+        </button>
+    </div>
+
+    <div class="room">
+        <span class="badge">PULSUZ</span>
+        <h3>Daily Open Arena</h3>
+        <p>Hər kəs üçün açıq gündəlik oyun meydanı.</p>
+
+        <div class="room-info">
+            <span>Vaxt</span>
+            <strong>5 + 0</strong>
+        </div>
+
+        <div class="room-info">
+            <span>Giriş</span>
+            <strong>$0.00</strong>
+        </div>
+
+        <button class="btn secondary"
+        onclick="joinRoom('Daily Open Arena')">
+            Otağa qoşul
+        </button>
+    </div>
+
+</div>
+
+<div style="text-align:center;margin-top:25px">
+    <button class="btn primary" onclick="openModal('create')">
+        + Öz oyun otağını yarat
+    </button>
+</div>
+
+</section>
+
+<!-- FEATURES -->
+
+<section id="features">
+
+<div class="section-title">
+    <div class="eyebrow">BUILT FOR COMPETITION</div>
+    <h2>ChessArena imkanları</h2>
+    <p>Peşəkar şahmat platforması üçün əsas funksiyalar.</p>
+</div>
+
+<div class="features">
+
+    <div class="feature">
+        <div class="feature-icon">♟</div>
+        <h3>Real şahmat sistemi</h3>
+        <p>Qanuni gedişlər, canlı saatlar, oyun tarixçəsi və PGN dəstəyi.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">⚖</div>
+        <h3>Anti-Cheat</h3>
+        <p>Şübhəli davranışların analizi, risk qiymətləndirilməsi və moderator yoxlaması.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">◎</div>
+        <h3>İstifadəçi profili</h3>
+        <p>Reytinq, statistika, oyun nəticələri və təsdiqlənmiş profil nişanları.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">▤</div>
+        <h3>Canlı chat</h3>
+        <p>Oyun zamanı yazışma, hazır mesajlar, bloklama və şikayət sistemi.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">♜</div>
+        <h3>Turnirlər</h3>
+        <p>Turnir cədvəlləri, iştirakçılar, nəticələr və liderlər sıralaması.</p>
+    </div>
+
+    <div class="feature">
+        <div class="feature-icon">◈</div>
+        <h3>10 dil dəstəyi</h3>
+        <p>Azərbaycan, ingilis, türk, rus, ərəb, ispan, fransız, alman, portuqal və Çin dili.</p>
+    </div>
+
+</div>
+
+</section>
+
+<!-- TOURNAMENTS -->
+
+<section id="tournaments">
+
+<div class="section-title">
+    <div class="eyebrow">GLOBAL COMPETITION</div>
+    <h2>Turnirlər və rəqabət</h2>
+    <p>Fərqli səviyyələrdə şahmatçılar üçün yarış imkanları.</p>
+</div>
+
+<div class="cta">
+    <div>
+        <div class="eyebrow">YOUR NEXT MOVE</div>
+        <h2>Növbəti rəqibini tap.</h2>
+        <p>ChessArena icmasına qoşul və öz şahmat yolunu başlat.</p>
+    </div>
+
+    <button class="btn primary"
+    onclick="openModal('register')">
+        Hesab yarat →
+    </button>
+</div>
+
+</section>
+
+</div>
+</main>
+
+<footer id="about">
+<div class="container">
+    <h3>♞ CHESSARENA</h3>
+    <p style="margin-top:10px">
+        REAL PLAYERS. REAL CHESS. GLOBAL COMPETITION.
+    </p>
+
+    <p style="margin-top:20px">
+        © 2026 ChessArena. Bütün hüquqlar qorunur.
+    </p>
+
+    <p style="margin-top:10px">
+        * 1% komissiya yalnız aktivləşdirilmiş ödənişli oyunlara aiddir.
+        Ödənişli funksiyalar müvafiq regionlarda hüquqi uyğunluqdan sonra aktivləşdirilməlidir.
+    </p>
+</div>
+</footer>
+
+<!-- MODAL -->
+
+<div class="modal-bg" id="modal">
+
+<div class="modal">
+
+    <button class="close" onclick="closeModal()">✕</button>
+
+    <h2 id="modalTitle">ChessArena</h2>
+
+    <p id="modalDescription">
+        ChessArena platformasına qoşul.
+    </p>
+
+    <div id="modalContent"></div>
+
+</div>
+</div>
+
+<script>
+
+/* CHESS BOARD */
+
+const pieces = {
+    r:"♜", n:"♞", b:"♝", q:"♛",
+    k:"♚", p:"♟",
+    R:"♖", N:"♘", B:"♗",
+    Q:"♕", K:"♔", P:"♙"
+};
+
+const position =
+"rnbqkbnr" +
+"pppppppp" +
+"........" +
+"........" +
+"........" +
+"........" +
+"PPPPPPPP" +
+"RNBQKBNR";
+
+const board = document.getElementById("chessBoard");
+
+[...position].forEach((piece,index) => {
+
+    const square = document.createElement("div");
+
+    const row = Math.floor(index / 8);
+    const col = index % 8;
+
+    square.className =
+        "square " +
+        ((row + col) % 2 === 0 ? "light" : "dark");
+
+    if(piece !== ".") {
+        square.textContent = pieces[piece];
+    }
+
+    square.addEventListener("click",() => {
+        document.querySelectorAll(".square")
+            .forEach(s => s.classList.remove("selected"));
+
+        square.classList.add("selected");
+    });
+
+    board.appendChild(square);
+});
+
+
+/* MODAL SYSTEM */
+
+function openModal(type) {
+
+    const modal = document.getElementById("modal");
+    const title = document.getElementById("modalTitle");
+    const description = document.getElementById("modalDescription");
+    const content = document.getElementById("modalContent");
+
+    if(type === "login") {
+
+        title.textContent = "Hesabına daxil ol";
+
+        description.textContent =
+            "ChessArena hesabına daxil olmaq üçün məlumatlarını yaz.";
+
+        content.innerHTML = `
+            <div class="field">
+                <label>Email</label>
+                <input type="email" placeholder="email@example.com">
+            </div>
+
+            <div class="field">
+                <label>Şifrə</label>
+                <input type="password" placeholder="Şifrən">
+            </div>
+
+            <button class="btn primary"
+            onclick="showMessage('Giriş üçün server bağlantısı tələb olunur.')">
+                Daxil ol
+            </button>
+        `;
+
+    }
+
+    else if(type === "create") {
+
+        title.textContent = "Oyun otağı yarat";
+
+        description.textContent =
+            "Yeni şahmat otağının parametrlərini seç.";
+
+        content.innerHTML = `
+            <div class="field">
+                <label>Otağın adı</label>
+                <input placeholder="Məsələn: Chess Duel">
+            </div>
+
+            <div class="field">
+                <label>Vaxt nəzarəti</label>
+                <select>
+                    <option>1 + 0 Bullet</option>
+                    <option>3 + 0 Blitz</option>
+                    <option>5 + 3 Blitz</option>
+                    <option>10 + 0 Rapid</option>
+                    <option>15 + 10 Rapid</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Oyun növü</label>
+                <select id="gameType">
+                    <option>Pulsuz</option>
+                    <option>Ödənişli P2P</option>
+                </select>
+            </div>
+
+            <button class="btn primary"
+            onclick="showMessage('Otaq yaratmaq üçün backend tələb olunur.')">
+                Otaq yarat
+            </button>
+        `;
+
+    }
+
+    else {
+
+        title.textContent = "ChessArena hesabı yarat";
+
+        description.textContent =
+            "Qlobal şahmat arenasına qoşul.";
+
+        content.innerHTML = `
+            <div class="field">
+                <label>Ad</label>
+                <input placeholder="Adın">
+            </div>
+
+            <div class="field">
+                <label>Soyad</label>
+                <input placeholder="Soyadın">
+            </div>
+
+            <div class="field">
+                <label>İstifadəçi adı</label>
+                <input placeholder="@username">
+            </div>
+
+            <div class="field">
+                <label>Email</label>
+                <input type="email" placeholder="email@example.com">
+            </div>
+
+            <div class="field">
+                <label>Ölkə</label>
+                <select>
+                    <option>Azərbaycan</option>
+                    <option>Türkiyə</option>
+                    <option>United States</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="field">
+                <label>Şifrə</label>
+                <input type="password" placeholder="Şifrə">
+            </div>
+
+            <button class="btn primary"
+            onclick="showMessage('Qeydiyyat üçün backend tələb olunur.')">
+                Hesab yarat
+            </button>
+        `;
+
+    }
+
+    modal.classList.add("active");
+}
+
+
+function closeModal() {
+    document.getElementById("modal")
+        .classList.remove("active");
+}
+
+
+/* ROOM SYSTEM */
+
+function joinRoom(name) {
+    showMessage(name + " seçildi. Real oyun serveri qoşulmalıdır.");
+}
+
+
+/* NOTIFICATION */
+
+function showMessage(message) {
+
+    let old = document.getElementById("notification");
+
+    if(old) old.remove();
+
+    const notification = document.createElement("div");
+
+    notification.id = "notification";
+    notification.textContent = message;
+
+    notification.style.position = "fixed";
+    notification.style.bottom = "25px";
+    notification.style.left = "50%";
+    notification.style.transform = "translateX(-50%)";
+    notification.style.background = "#b8f477";
+    notification.style.color = "#14200c";
+    notification.style.padding = "14px 20px";
+    notification.style.borderRadius = "10px";
+    notification.style.fontWeight = "800";
+    notification.style.fontSize = "12px";
+    notification.style.zIndex = "500";
+
+    document.body.appendChild(notification);
+
+    setTimeout(() => notification.remove(),3000);
+}
+
+
+/* LANGUAGE SELECT */
+
+document.getElementById("language")
+.addEventListener("change",function() {
+
+    showMessage(
+        "Seçilmiş dil: " + this.value +
+        ". Tam tərcümə sistemi əlavə edilməlidir."
+    );
+
+});
+
+</script>
+
+</body>
+</html>
